@@ -1,0 +1,275 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# Datos de acceso
+usuario_correcto = "Personal01"
+contrasena_correcta = "S4lud"
+
+# Listas para guardar los registros
+pacientes = []
+citas = []
+
+
+# Funcion para iniciar sesion
+def iniciar_sesion():
+    usuario = txt_usuario.get()
+    contrasena = txt_contrasena.get()
+
+    if usuario == usuario_correcto and contrasena == contrasena_correcta:
+        messagebox.showinfo(
+            "Acceso permitido",
+            "¡Bienvenido al Hospital Santa Rosa!"
+        )
+        mostrar_menu()
+    else:
+        messagebox.showerror(
+            "Acceso denegado",
+            "Usuario o contraseña incorrectos"
+        )
+
+
+# Funcion para mostrar el menu principal
+def mostrar_menu():
+    limpiar_ventana()
+
+    ventana.title("Menu principal - Hospital Santa Rosa")
+    ventana.geometry("600x400")
+    ventana.config(bg="#E8F0F8")
+
+    tk.Label(
+        ventana,
+        text="HOSPITAL SANTA ROSA",
+        font=("Arial", 22, "bold"),
+        bg="#E8F0F8"
+    ).pack(pady=25)
+
+    tk.Label(
+        ventana,
+        text="Sistema de gestion de salud",
+        font=("Arial", 12),
+        bg="#E8F0F8"
+    ).pack(pady=5)
+
+    tk.Label(
+        ventana,
+        text="MENU PRINCIPAL",
+        font=("Arial", 15, "bold"),
+        bg="#E8F0F8"
+    ).pack(pady=20)
+
+    tk.Button(
+        ventana,
+        text="Registrar paciente",
+        width=25,
+        command=registrar_paciente
+    ).pack(pady=10)
+
+    tk.Button(
+        ventana,
+        text="Registrar cita medica",
+        width=25,
+        command=registrar_cita
+    ).pack(pady=10)
+
+    tk.Button(
+        ventana,
+        text="Cerrar sesion",
+        width=25,
+        command=crear_login
+    ).pack(pady=20)
+
+
+# Funcion para limpiar la ventana principal
+def limpiar_ventana():
+    for elemento in ventana.winfo_children():
+        elemento.destroy()
+
+
+# Funcion para registrar pacientes
+def registrar_paciente():
+    registro = tk.Toplevel(ventana)
+    registro.title("Registro de pacientes - Hospital Santa Rosa")
+    registro.geometry("450x500")
+    registro.config(bg="#E8F0F8")
+
+    tk.Label(
+        registro,
+        text="REGISTRO DE PACIENTES",
+        font=("Arial", 18, "bold"),
+        bg="#E8F0F8"
+    ).pack(pady=20)
+
+    entradas = {}
+    campos = [
+        "ID del paciente",
+        "Nombre",
+        "Apellido",
+        "DNI",
+        "Telefono",
+        "Correo",
+        "Direccion"
+    ]
+
+    for campo in campos:
+        tk.Label(
+            registro,
+            text=campo,
+            bg="#E8F0F8"
+        ).pack()
+
+        entrada = tk.Entry(registro, width=30)
+        entrada.pack(pady=4)
+        entradas[campo] = entrada
+
+    def guardar_paciente():
+        datos = {}
+
+        for campo in campos:
+            valor = entradas[campo].get().strip()
+            if valor == "":
+                messagebox.showerror("Error", "Complete todos los campos")
+                return
+            datos[campo] = valor
+
+        if len(datos["DNI"]) != 8 or not datos["DNI"].isdigit():
+            messagebox.showerror("Error", "El DNI debe tener exactamente 8 digitos")
+            return
+
+        pacientes.append(datos)
+        messagebox.showinfo("Registro exitoso", "Paciente registrado correctamente")
+
+        for entrada in entradas.values():
+            entrada.delete(0, tk.END)
+
+    tk.Button(
+        registro,
+        text="Guardar paciente",
+        width=25,
+        command=guardar_paciente
+    ).pack(pady=15)
+
+    tk.Button(
+        registro,
+        text="Cerrar",
+        width=25,
+        command=registro.destroy
+    ).pack(pady=5)
+
+
+# Funcion para registrar citas medicas
+def registrar_cita():
+    registro = tk.Toplevel(ventana)
+    registro.title("Registro de citas - Hospital Santa Rosa")
+    registro.geometry("450x500")
+    registro.config(bg="#E8F0F8")
+
+    tk.Label(
+        registro,
+        text="REGISTRO DE CITAS MEDICAS",
+        font=("Arial", 18, "bold"),
+        bg="#E8F0F8"
+    ).pack(pady=20)
+
+    entradas = {}
+    campos = [
+        "ID de la cita",
+        "DNI del paciente",
+        "Nombre del medico",
+        "Fecha",
+        "Hora",
+        "Motivo de la cita"
+    ]
+
+    for campo in campos:
+        tk.Label(
+            registro,
+            text=campo,
+            bg="#E8F0F8"
+        ).pack()
+
+        entrada = tk.Entry(registro, width=30)
+        entrada.pack(pady=4)
+        entradas[campo] = entrada
+
+    def guardar_cita():
+        datos = {}
+
+        for campo in campos:
+            valor = entradas[campo].get().strip()
+            if valor == "":
+                messagebox.showerror("Error", "Complete todos los campos")
+                return
+            datos[campo] = valor
+
+        if len(datos["DNI del paciente"]) != 8 or not datos["DNI del paciente"].isdigit():
+            messagebox.showerror("Error", "El DNI debe tener exactamente 8 digitos")
+            return
+
+        citas.append(datos)
+        messagebox.showinfo("Registro exitoso", "Cita medica registrada correctamente")
+
+        for entrada in entradas.values():
+            entrada.delete(0, tk.END)
+
+    tk.Button(
+        registro,
+        text="Guardar cita",
+        width=25,
+        command=guardar_cita
+    ).pack(pady=15)
+
+    tk.Button(
+        registro,
+        text="Cerrar",
+        width=25,
+        command=registro.destroy
+    ).pack(pady=5)
+
+
+# Funcion para volver al inicio de sesion
+def crear_login():
+    limpiar_ventana()
+
+    ventana.title("Inicio de sesion - Hospital Santa Rosa")
+    ventana.geometry("400x350")
+    ventana.config(bg="#E8F0F8")
+
+    tk.Label(
+        ventana,
+        text="HOSPITAL SANTA ROSA",
+        font=("Arial", 18, "bold"),
+        bg="#E8F0F8"
+    ).pack(pady=25)
+
+    tk.Label(
+        ventana,
+        text="Usuario",
+        bg="#E8F0F8"
+    ).pack()
+
+    global txt_usuario
+    txt_usuario = tk.Entry(ventana, width=25)
+    txt_usuario.pack(pady=5)
+
+    tk.Label(
+        ventana,
+        text="Contraseña",
+        bg="#E8F0F8"
+    ).pack()
+
+    global txt_contrasena
+    txt_contrasena = tk.Entry(ventana, width=25, show="*")
+    txt_contrasena.pack(pady=5)
+
+    tk.Button(
+        ventana,
+        text="Iniciar sesion",
+        width=20,
+        command=iniciar_sesion
+    ).pack(pady=25)
+
+
+# Ventana principal
+ventana = tk.Tk()
+crear_login()
+ventana.mainloop()
